@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    button[disabled] {
+      background-color: lightgray;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <button id="usage-button" onclick="handleButtonClick()">Click Me</button>
+  <meter id="usage-meter" min="0" max="3" value="0"></meter>
+
+  <script>
+    var usageButton = document.getElementById('usage-button');
+    var usageMeter = document.getElementById('usage-meter');
+    var usageCount = 0;
+
+    function handleButtonClick() {
+      if (usageCount < 3) {
+        usageCount++;
+        usageMeter.value = usageCount;
+
+        if (usageCount === 3) {
+          usageButton.disabled = true;
+        }
+      }
+    }
+  </script>
+</body>
+</html>
