@@ -1,0 +1,14 @@
+.template {
+    display: flex;
+    margin-bottom: 20px;
+  }
+  
+  .template img {
+    width: 200px;
+    height: 150px;
+  }
+  
+  .template .content {
+    margin-left: 20px;
+  }
+  
