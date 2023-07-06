@@ -4,8 +4,12 @@ const myMath = {
   },
   
   multiply: (...numbers) => {
-    return numbers.reduce((product, num) => product * num, 1);
+    if (numbers.length === 0) {
+      return 0;
+    }
+    return numbers.reduce((product, num) => product * num);
   },
+
   
   factorial: (n) => {
     if (n === 0 || n === 1) {
@@ -19,3 +23,9 @@ const myMath = {
     }
   }
 };
+
+console.log(myMath.add(2,3,4));
+console.log(myMath.multiply());
+console.log(myMath.factorial(3));
+
+
