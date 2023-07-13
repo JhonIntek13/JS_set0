@@ -9,24 +9,31 @@
   </style>
 </head>
 <body>
-  <button id="usage-button" onclick="handleButtonClick()">Click Me</button>
+  <button id="usage-button">Click Me</button>
   <meter id="usage-meter" min="0" max="3" value="0"></meter>
 
   <script>
-    var usageButton = document.getElementById('usage-button');
-    var usageMeter = document.getElementById('usage-meter');
-    var usageCount = 0;
+    (function () {
+      var usageButton = document.getElementById('usage-button');
+      var usageMeter = document.getElementById('usage-meter');
+      var usageCount = 0;
 
-    function handleButtonClick() {
-      if (usageCount < 3) {
-        usageCount++;
-        usageMeter.value = usageCount;
+      function handleButtonClick() {
+        if (usageCount < 3) {
+          usageCount++;
+          usageMeter.value = usageCount;
 
-        if (usageCount === 3) {
-          usageButton.disabled = true;
+          if (usageCount === 3) {
+            usageButton.disabled = true;
+          }
         }
       }
-    }
+
+    usageButton.addEventListener('click', handleButtonClick);
+    })();
+    setTimeout(function () {
+      usageMeter.value = usageCount;
+    }, 0);
   </script>
 </body>
 </html>
