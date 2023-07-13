@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>.grid-container {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 250px; 
+  }
+  
+  .grid-element {
+    width: calc(20% - 10px);
+    height: 50px;
+    border: 1px solid black;
+    text-align: center;
+    cursor: pointer;
+    margin: 5px;
+    box-sizing: border-box;
+  }
+  
+  @media (max-width: 300px) {
+    .grid-element {
+      width: calc(100% - 10px);
+    }
+  }
+  
+  @media (min-width: 301px) and (max-width: 600px) {
+    .grid-element {
+      width: calc(33.33% - 10px);
+    }
+  }
+  
+  @media (min-width: 601px) and (max-width: 900px) {
+    .grid-element {
+      width: calc(25% - 10px);
+    }
+  }
+  
+  
+  </style>
+</head>
+<body>
+  <div id="grid-container" class="grid-container"></div>
+
+  <script>
+    var gridContainer = document.getElementById('grid-container');
+    var fragment = document.createDocumentFragment();
+
+    for (let i = 1; i <= 5; i++) {
+      for (let j = 1; j <= 5; j++) {
+        var gridElement = document.createElement('div');
+        gridElement.className = 'grid-element';
+        gridElement.textContent = (i - 1) * 5 + j;
+
+        fragment.appendChild(gridElement);
+      }
+    }
+
+    gridContainer.appendChild(fragment);
+
+    gridContainer.addEventListener('click', function(event) {
+      if (event.target.classList.contains('grid-element')) {
+        var number = event.target.textContent;
+        alert('Clicked on element ' + number);
+      }
+    });
+  </script>
+</body>
+</html>

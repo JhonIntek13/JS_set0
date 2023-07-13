@@ -1,0 +1,14 @@
+{
+  "template1": {
+    "image": "image1.jpg",
+    "alt": "Image 1",
+    "title": "Title 1",
+    "snippet": "Snippet of text 1"
+  },
+  "template2": {
+    "image": "image2.jpg",
+    "alt": "Image 2",
+    "title": "Title 2",
+    "snippet": "Snippet of text 2"
+  }
+}
