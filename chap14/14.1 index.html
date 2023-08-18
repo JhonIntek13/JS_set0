@@ -27,19 +27,19 @@
 
   <script>
     function createGrid() {
-      var container = document.getElementById('container');
-      var rowsInput = document.getElementById('rows');
-      var columnsInput = document.getElementById('columns');
-      var rows = parseInt(rowsInput.value);
-      var columns = parseInt(columnsInput.value);
+      let container = document.getElementById('container');
+      let rowsInput = document.getElementById('rows');
+      let columnsInput = document.getElementById('columns');
+      let rows = parseInt(rowsInput.value);
+      let columns = parseInt(columnsInput.value);
 
       container.innerHTML = ''; // Clear the container
 
-      var fragment = document.createDocumentFragment();
+      let fragment = document.createDocumentFragment();
 
       for (let i = 0; i < rows; i++) {
         for (let j = 0; j < columns; j++) {
-          var cell = document.createElement('div');
+          let cell = document.createElement('div');
           cell.classList.add('cell');
           cell.textContent = (i * columns + j + 1).toString();
           fragment.appendChild(cell);

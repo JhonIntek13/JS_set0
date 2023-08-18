@@ -2,17 +2,20 @@
 <html>
 <head>
   <style>
-    .columns-container {
-      column-gap: 20px;
-    }
-
     #text {
       width: 100%;
+    }
+
+    #output {
+      column-count: 1;
     }
   </style>
 </head>
 <body>
-  <textarea id="text" rows="10" readonly>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Fuga beatae assumenda rerum, alias, eos, voluptas ullam magni quaerat consectetur officiis corporis dolorum quidem fugit at distinctio ipsam! Eveniet, eius incidunt.</textarea>
+  <textarea id="text" rows="10" readonly>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Fuga beatae assumenda rerum, alias
+    orem ipsum dolor, sit amet consectetur adipisicing elit. Fuga beatae assumenda rerum, alias, 
+    orem ipsum dolor, sit amet consectetur adipisicing elit. Fuga beatae assumenda rerum, alias, 
+    orem ipsum dolor, sit amet consectetur adipisicing elit. Fuga beatae assumenda rerum, alias, , eos, voluptas ullam magni quaerat consectetur officiis corporis dolorum quidem fugit at distinctio ipsam! Eveniet, eius incidunt.</textarea>
   <br>
   <label for="columns">Number of Columns:</label>
   <select id="columns" onchange="updateColumns()">
@@ -22,30 +25,20 @@
     <option value="4">4</option>
   </select>
 
-  <div id="output" class="columns-container"></div>
+  <div id="output"></div>
 
   <script>
     function updateColumns() {
-  var outputContainer = document.getElementById('output');
-  var text = document.getElementById('text').value;
-  var selectedColumns = parseInt(document.getElementById('columns').value);
+      var outputContainer = document.getElementById('output');
+      var text = document.getElementById('text').value;
+      var selectedColumns = document.getElementById('columns').value;
 
-  outputContainer.innerHTML = ''; // Clear previous content
+      outputContainer.style.columnCount = selectedColumns;
+      outputContainer.innerHTML = text;
+    }
 
-  outputContainer.style.columnCount = selectedColumns;
-
-  var words = text.split(' ');
-
-  words.forEach(function(word) {
-    var column = document.createElement('div');
-    column.textContent = word;
-    outputContainer.appendChild(column);
-  });
-}
-
-// Update columns on page load
-window.addEventListener('DOMContentLoaded', updateColumns);
-
+    // Update columns on page load
+    window.addEventListener('DOMContentLoaded', updateColumns);
   </script>
 </body>
 </html>

@@ -6,22 +6,38 @@
       background-color: lightgray;
       cursor: not-allowed;
     }
+
+    #progress-container {
+      width: 100%;
+      height: 20px;
+      background-color: lightgray;
+      position: relative;
+    }
+
+    #progress-bar {
+      height: 100%;
+      width: 0;
+      background-color: dodgerblue;
+    }
   </style>
 </head>
 <body>
   <button id="usage-button">Click Me</button>
-  <meter id="usage-meter" min="0" max="3" value="0"></meter>
+  <div id="progress-container">
+    <div id="progress-bar"></div>
+  </div>
 
   <script>
     (function () {
       var usageButton = document.getElementById('usage-button');
-      var usageMeter = document.getElementById('usage-meter');
+      var progressBar = document.getElementById('progress-bar');
       var usageCount = 0;
 
       function handleButtonClick() {
         if (usageCount < 3) {
           usageCount++;
-          usageMeter.value = usageCount;
+          var percent = (usageCount / 3) * 100;
+          progressBar.style.width = percent + '%';
 
           if (usageCount === 3) {
             usageButton.disabled = true;
