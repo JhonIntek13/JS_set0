@@ -22,7 +22,44 @@
   position: relative;
 }
 
-.template2 .content{
+.template2 .content{body {
+  font-family: Arial, sans-serif;
+}
+
+.template {
+  clear: both;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.template img {
+  max-width: 200px;
+  float: left;
+}
+
+.content {
+  overflow: hidden;
+  position: relative;
+}
+
+.template1 h2:before {
+  content: "Item " counter(item);
+  counter-increment: item;
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.template2 .content {
+  position: relative;
+  overflow: unset;
+}
+
+.snippet {
+  clear: none;
+  margin-left: 0px;
+}
+
+
   position: relative;
   overflow:unset;
 }

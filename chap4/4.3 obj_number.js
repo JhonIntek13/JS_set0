@@ -3,28 +3,29 @@ function NumberHolder(value) {
     throw new Error('Value must be a number');
   }
 
-  // Use of a closure to encapsulate the _value property
+  // Use a closure to store the value
   let _value = value;
 
-  this.getValue = function() {
-    return _value;
-  };
-
-  // Define a setter 
-  this.setValue = function(newValue) {
-    if (typeof newValue !== 'number') {
-      throw new Error('Value must be a number');
+  // Define a getter for the value property
+  Object.defineProperty(this, 'value', {
+    get: function() {
+      return _value;
+    },
+    set: function(newValue) {
+      if (typeof newValue !== 'number') {
+        throw new Error('Value must be a number');
+      }
+      _value = newValue;
     }
-    _value = newValue;
-  };
+  });
 }
 
 // Usage
 var numberHolder = new NumberHolder(42);
-console.log(numberHolder.getValue()); // Output: 42
+console.log(numberHolder.value); // Output: 42
 
-numberHolder.setValue(100);
-console.log(numberHolder.getValue()); // Output: 100
+numberHolder.value = 100;
+console.log(numberHolder.value); // Output: 100
 
 // Throws an error when trying to set a non-number value
-numberHolder.setValue('test');
+numberHolder.value = 'test';

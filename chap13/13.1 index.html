@@ -42,12 +42,12 @@
   <div id="grid-container" class="grid-container"></div>
 
   <script>
-    var gridContainer = document.getElementById('grid-container');
-    var fragment = document.createDocumentFragment();
+    let gridContainer = document.getElementById('grid-container');
+    let fragment = document.createDocumentFragment();
 
     for (let i = 1; i <= 5; i++) {
       for (let j = 1; j <= 5; j++) {
-        var gridElement = document.createElement('div');
+        let gridElement = document.createElement('div');
         gridElement.className = 'grid-element';
         gridElement.textContent = (i - 1) * 5 + j;
 
@@ -59,7 +59,7 @@
 
     gridContainer.addEventListener('click', function(event) {
       if (event.target.classList.contains('grid-element')) {
-        var number = event.target.textContent;
+        let number = event.target.textContent;
         alert('Clicked on element ' + number);
       }
     });

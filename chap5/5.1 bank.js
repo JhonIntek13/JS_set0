@@ -1,42 +1,59 @@
 function createBank() {
   const clients = [];
 
-  function createClient(accountNumber, initialBalance) {
-    let balance = initialBalance;
+  function createClient(clientName) {
+    const accounts = [];
 
-    function getClientBalance() {
-      return balance;
-    }
+    function createAccount(accountNumber, initialBalance) {
+      let balance = initialBalance;
 
-    function deposit(amount) {
-      if (amount > 0) {
-        balance += amount;
-        console.log("Deposit successful!");
-      } else {
-        throw new Error("Invalid deposit amount!");
+      function getAccountBalance() {
+        return balance;
       }
-    }
 
-    function retrieve(amount) {
-      if (amount > 0 && amount <= balance) {
-        balance -= amount;
-        console.log("Money retrieved successfully!");
-      } else {
-        throw new Error("Insufficient balance or invalid retrieval amount!");
+      function deposit(amount) {
+        if (amount > 0) {
+          balance += amount;
+          console.log("Deposit successful!");
+        } else {
+          throw new Error("Invalid deposit amount!");
+        }
       }
-    }
 
-    function getClientInfo() {
-      return {
-        accountNumber,
-        balance: getClientBalance(),
+      function retrieve(amount) {
+        if (amount > 0 && amount <= balance) {
+          balance -= amount;
+          console.log("Money retrieved successfully!");
+        } else {
+          throw new Error("Insufficient balance or invalid retrieval amount!");
+        }
+      }
+
+      function getAccountInfo() {
+        return {
+          accountNumber,
+          balance: getAccountBalance(),
+        };
+      }
+
+      const account = {
+        deposit,
+        retrieve,
+        getAccountInfo,
       };
+
+      accounts.push(account);
+      return account;
+    }
+
+    function getAllAccounts() {
+      return accounts;
     }
 
     const client = {
-      deposit,
-      retrieve,
-      getClientInfo,
+      clientName,
+      createAccount,
+      getAllAccounts,
     };
 
     clients.push(client);
@@ -55,15 +72,19 @@ function createBank() {
 
 const bank = createBank();
 
-const client1 = bank.createClient("123456", 1000);
-const client2 = bank.createClient("987654", 500);
+const client1 = bank.createClient("John Doe");
+const account1 = client1.createAccount("123456", 1000);
+const account2 = client1.createAccount("987654", 500);
 
-const client1Info = client1.getClientInfo();
-console.log(client1Info);
+const client2 = bank.createClient("Jane Smith");
+const account3 = client2.createAccount("555555", 2000);
+
+const account1Info = account1.getAccountInfo();
+console.log(account1Info);
 
 try {
-  client1.deposit(500);
-  client1.retrieve(20000);
+  account1.deposit(500);
+  account1.retrieve(20000);
 } catch (error) {
   console.error(error.message);
 }

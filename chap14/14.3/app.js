@@ -4,6 +4,7 @@ let selectedItemIndex = -1; // Index of the selected item from template 1
 
 function navigateToTemplate1() {
   currentView = 'template1';
+  selectedItemIndex = -1; // Reset the selected item index
   localStorage.setItem('currentView', currentView);
   displayView(currentView);
 }
@@ -37,42 +38,46 @@ function displayView(view) {
   fetch('data.json')
     .then(response => response.json())
     .then(data => {
-      if (view === 'template1') {
-        for (const key in data) {
-          if (data.hasOwnProperty(key)) {
-            const item = data[key];
-            const template = document.querySelector('#template1').content.cloneNode(true);
-            const templateContainer = template.querySelector('.template1');
+      if (view === 'template1' || !data[selectedItemIndex]) {
+        // Display main articles view with snippets
+        data.forEach((item, index) => {
+          const template = document.querySelector('#template1').content.cloneNode(true);
+          const templateContainer = template.querySelector('.template1');
 
-            templateContainer.querySelector('img').src = item.image;
-            templateContainer.querySelector('img').alt = item.alt;
-            templateContainer.querySelector('h2').textContent = item.title;
-            templateContainer.querySelector('p').textContent = item.snippet;
+          templateContainer.querySelector('img').src = item.image;
+          templateContainer.querySelector('img').alt = item.alt;
+          templateContainer.querySelector('h2').textContent = item.title;
 
-            appContainer.appendChild(template);
-          }
-        }
-      } else if (view === 'template2' && selectedItemIndex !== -1 && data[Object.keys(data)[selectedItemIndex]]) {
-        const selectedItem = data[Object.keys(data)[selectedItemIndex]];
+          // Create a snippet from the text for the first 100 chars
+          const snippetLength = 100;
+          const snippetText = item.text.substring(0, snippetLength) + '...';
+          templateContainer.querySelector('.snippet').textContent = snippetText;
+
+          appContainer.appendChild(template);
+        });
+      } else if (view === 'template2' && selectedItemIndex !== -1 && data[selectedItemIndex]) {
+        // Display article details view
+        const selectedItem = data[selectedItemIndex];
         const template = document.querySelector('#template2').content.cloneNode(true);
         const templateContainer = template.querySelector('.template2');
 
         templateContainer.querySelector('img').src = selectedItem.image;
         templateContainer.querySelector('img').alt = selectedItem.alt;
         templateContainer.querySelector('h2').textContent = selectedItem.title;
-        templateContainer.querySelector('.template2-text').textContent = selectedItem.snippet;
+        templateContainer.querySelector('p').textContent = selectedItem.text;
 
-        // Add click event listener to navigate back to template1
         templateContainer.querySelector('.template2-link').addEventListener('click', navigateToTemplate1);
 
         appContainer.appendChild(template);
       }
 
-      adjustLayout(); // Call adjustLayout() after content is loaded
+      adjustLayout(); 
     })
     .catch(error => {
       console.error('Error fetching JSON:', error);
     });
 }
+
+
 
 displayView(currentView);
