@@ -1,63 +1,53 @@
 function createBank() {
   const clients = [];
 
-  function createClient(clientName) {
-    const accounts = [];
-
-    function createAccount(accountNumber, initialBalance) {
-      let balance = initialBalance;
-
-      function getAccountBalance() {
-        return balance;
-      }
-
-      function deposit(amount) {
-        if (amount > 0) {
-          balance += amount;
-          console.log("Deposit successful!");
-        } else {
-          throw new Error("Invalid deposit amount!");
-        }
-      }
-
-      function retrieve(amount) {
-        if (amount > 0 && amount <= balance) {
-          balance -= amount;
-          console.log("Money retrieved successfully!");
-        } else {
-          throw new Error("Insufficient balance or invalid retrieval amount!");
-        }
-      }
-
-      function getAccountInfo() {
-        return {
-          accountNumber,
-          balance: getAccountBalance(),
-        };
-      }
-
-      const account = {
-        deposit,
-        retrieve,
-        getAccountInfo,
-      };
-
-      accounts.push(account);
-      return account;
-    }
-
-    function getAllAccounts() {
-      return accounts;
-    }
-
+  function createClient(clientName, initialBalance) {
     const client = {
       clientName,
-      createAccount,
-      getAllAccounts,
+      balance: initialBalance,
     };
 
     clients.push(client);
     return client;
+  }
+
+  function createAccount(client, accountNumber) {
+    if (client.balance <= 0) {
+      throw new Error("Client has no initial balance to create an account.");
+    }
+
+    const account = {
+      client,
+      accountNumber,
+      balance: client.balance,
+    };
+
+    return account;
+  }
+
+  function deposit(account, amount) {
+    if (amount <= 0) {
+      throw new Error("Invalid deposit amount!");
+    }
+
+    account.balance += amount;
+    console.log("Deposit successful!");
+  }
+
+  function retrieve(account, amount) {
+    if (amount <= 0 || amount > account.balance) {
+      throw new Error("Insufficient balance or invalid retrieval amount!");
+    }
+
+    account.balance -= amount;
+    console.log("Money retrieved successfully!");
+  }
+
+  function getAccountInfo(account) {
+    return {
+      accountNumber: account.accountNumber,
+      balance: account.balance,
+    };
   }
 
   function getAllClients() {
@@ -66,25 +56,29 @@ function createBank() {
 
   return {
     createClient,
+    createAccount,
+    deposit,
+    retrieve,
+    getAccountInfo,
     getAllClients,
   };
 }
 
 const bank = createBank();
 
-const client1 = bank.createClient("John Doe");
-const account1 = client1.createAccount("123456", 1000);
-const account2 = client1.createAccount("987654", 500);
+const client1 = bank.createClient("John Doe", 1000);
+const account1 = bank.createAccount(client1, "123456");
+const account2 = bank.createAccount(client1, "987654");
 
-const client2 = bank.createClient("Jane Smith");
-const account3 = client2.createAccount("555555", 2000);
+const client2 = bank.createClient("Jane Smith", 2000);
+const account3 = bank.createAccount(client2, "555555");
 
-const account1Info = account1.getAccountInfo();
+const account1Info = bank.getAccountInfo(account1);
 console.log(account1Info);
 
 try {
-  account1.deposit(500);
-  account1.retrieve(20000);
+  bank.deposit(account1, 500);
+  bank.retrieve(account1, 20000);
 } catch (error) {
   console.error(error.message);
 }
