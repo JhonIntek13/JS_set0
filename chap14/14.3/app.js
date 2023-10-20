@@ -1,6 +1,14 @@
 const appContainer = document.getElementById('app');
 let currentView = localStorage.getItem('currentView') || 'template1';
 let selectedItemIndex = -1; // Index of the selected item from template 1
+// Initialize the selected item's index from localStorage
+const storedSelectedItemIndex = localStorage.getItem('selectedItemIndex');
+if (storedSelectedItemIndex) {
+  selectedItemIndex = parseInt(storedSelectedItemIndex);
+} else {
+  selectedItemIndex = -1;
+}
+
 
 function navigateToTemplate1() {
   currentView = 'template1';
@@ -12,9 +20,14 @@ function navigateToTemplate1() {
 function navigateToTemplate2(index) {
   selectedItemIndex = index;
   currentView = 'template2';
+  
+  // Store the selected item's index in localStorage
   localStorage.setItem('currentView', currentView);
+  localStorage.setItem('selectedItemIndex', selectedItemIndex);
+
   displayView(currentView);
 }
+
 
 function adjustLayout() {
   const template1Items = document.querySelectorAll('.template1');
