@@ -66,6 +66,10 @@
 
 .template2-text {
   clear: none;
-  margin-left: 0px; /* Adjust the value based on your image width and layout */
-  shape-outside: url(image2.jpg); /* Add this line to shape the text around the image */
+  margin-left: 0px; 
+  shape-outside: url(image2.jpg);
+}
+
+h2::before {
+  display: none;
 }

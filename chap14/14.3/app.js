@@ -1,18 +1,10 @@
 const appContainer = document.getElementById('app');
 let currentView = localStorage.getItem('currentView') || 'template1';
-let selectedItemIndex = -1; // Index of the selected item from template 1
-// Initialize the selected item's index from localStorage
-const storedSelectedItemIndex = localStorage.getItem('selectedItemIndex');
-if (storedSelectedItemIndex) {
-  selectedItemIndex = parseInt(storedSelectedItemIndex);
-} else {
-  selectedItemIndex = -1;
-}
-
+let selectedItemIndex = -1;
 
 function navigateToTemplate1() {
   currentView = 'template1';
-  selectedItemIndex = -1; // Reset the selected item index
+  selectedItemIndex = -1;
   localStorage.setItem('currentView', currentView);
   displayView(currentView);
 }
@@ -20,39 +12,62 @@ function navigateToTemplate1() {
 function navigateToTemplate2(index) {
   selectedItemIndex = index;
   currentView = 'template2';
-  
-  // Store the selected item's index in localStorage
-  localStorage.setItem('currentView', currentView);
-  localStorage.setItem('selectedItemIndex', selectedItemIndex);
 
-  displayView(currentView);
+  fetch('data.json')
+    .then(response => response.json())
+    .then(data => {
+      const selectedItem = data[selectedItemIndex];
+      const itemId = selectedItem.id;
+
+      history.pushState(null, null, `?id=${itemId}`);
+
+      localStorage.setItem('currentView', currentView);
+      localStorage.setItem('selectedItemIndex', selectedItemIndex);
+
+      displayView(currentView);
+    })
+    .catch(error => {
+      console.error('Error fetching JSON:', error);
+    });
 }
 
-
 function adjustLayout() {
-  const template1Items = document.querySelectorAll('.template1');
-  template1Items.forEach((item, index) => {
-    item.style.counterIncrement = 'section';
-    const numberSpan = document.createElement('span');
-    numberSpan.className = 'item-number';
-    numberSpan.textContent = `Item ${index + 1}: `;
-    item.insertBefore(numberSpan, item.firstChild);
+  fetch('data.json')
+    .then(response => response.json())
+    .then(data => {
+      const template1Items = document.querySelectorAll('.template1');
+      template1Items.forEach((item, index) => {
+        item.style.counterIncrement = 'section';
+        const numberSpan = document.createElement('span');
+        numberSpan.className = 'item-number';
+        numberSpan.textContent = `Item ${index + 1}: `;
+        item.insertBefore(numberSpan, item.firstChild);
 
-    // Add click event listener to navigate to template2-like view
-    item.addEventListener('click', () => {
-      navigateToTemplate2(index);
+        item.addEventListener('click', () => {
+          navigateToTemplate2(index);
+        });
+      });
+    })
+    .catch(error => {
+      console.error('Error fetching JSON:', error);
     });
-  });
 }
 
 function displayView(view) {
+  let itemId = getParameterByName('id');
+
   appContainer.innerHTML = '';
 
   fetch('data.json')
     .then(response => response.json())
     .then(data => {
-      if (view === 'template1' || !data[selectedItemIndex]) {
-        // Display main articles view with snippets
+      if (!itemId) {
+        itemId = localStorage.getItem('selectedItemId'); // Retrieve the item ID from localStorage
+      }
+
+      const selectedItem = data.find(item => item.id === itemId);
+
+      if (view === 'template1' || !itemId) {
         data.forEach((item, index) => {
           const template = document.querySelector('#template1').content.cloneNode(true);
           const templateContainer = template.querySelector('.template1');
@@ -61,16 +76,13 @@ function displayView(view) {
           templateContainer.querySelector('img').alt = item.alt;
           templateContainer.querySelector('h2').textContent = item.title;
 
-          // Create a snippet from the text for the first 100 chars
           const snippetLength = 100;
           const snippetText = item.text.substring(0, snippetLength) + '...';
           templateContainer.querySelector('.snippet').textContent = snippetText;
 
           appContainer.appendChild(template);
         });
-      } else if (view === 'template2' && selectedItemIndex !== -1 && data[selectedItemIndex]) {
-        // Display article details view
-        const selectedItem = data[selectedItemIndex];
+      } else if (view === 'template2' && selectedItem) {
         const template = document.querySelector('#template2').content.cloneNode(true);
         const templateContainer = template.querySelector('.template2');
 
@@ -84,13 +96,24 @@ function displayView(view) {
         appContainer.appendChild(template);
       }
 
-      adjustLayout(); 
+      adjustLayout();
+
+      localStorage.setItem('selectedItemId', itemId);
     })
     .catch(error => {
       console.error('Error fetching JSON:', error);
     });
 }
 
+function getParameterByName(name, url = window.location.href) {
+  name = name.replace(/[[\]]/g, '\\$&');
+  const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+  const results = regex.exec(url);
 
+  if (!results) return null;
+  if (!results[2]) return '';
+
+  return decodeURIComponent(results[2].replace(/\+/g, ' '));
+}
 
 displayView(currentView);
