@@ -10,25 +10,28 @@ class Client {
   }
 }
 
-function createAccount(client, accountNumber, initialBalance) {
-  if (initialBalance <= 0) {
-    throw new Error("Initial balance should be greater than 0.");
+class Bank {
+  constructor() {
+    this.accounts = [];
   }
 
-  const account = {
-    client,
-    accountNumber,
-    balance: initialBalance,
-  };
+  createAccount(client, accountNumber, initialBalance) {
+    if (initialBalance <= 0) {
+      throw new Error("Initial balance should be greater than 0.");
+    }
 
-  client.addAccount(account);
-  return account;
-}
+    const account = {
+      client,
+      accountNumber,
+      balance: initialBalance,
+    };
 
-function createBank() {
-  const accounts = [];
+    client.addAccount(account);
+    this.accounts.push(account); // Adding the account to the bank's records
+    return account;
+  }
 
-  function deposit(account, amount) {
+  deposit(account, amount) {
     if (amount <= 0) {
       throw new Error("Invalid deposit amount!");
     }
@@ -38,7 +41,7 @@ function createBank() {
     console.log(`New balance: ${account.balance}`);
   }
 
-  function retrieve(account, amount) {
+  retrieve(account, amount) {
     if (amount <= 0 || amount > account.balance) {
       throw new Error("Insufficient balance or invalid retrieval amount!");
     }
@@ -48,47 +51,30 @@ function createBank() {
     console.log(`New balance: ${account.balance}`);
   }
 
-  function getAccountInfo(account) {
+  getAccountInfo(account) {
     return {
       accountNumber: account.accountNumber,
       balance: account.balance,
     };
   }
 
-  function getAllAccounts() {
-    return accounts;
+  getAllAccounts() {
+    return this.accounts;
   }
-
-  function addAccountToBank(account) {
-    accounts.push(account);
-  }
-
-  return {
-    createAccount,
-    deposit,
-    retrieve,
-    getAccountInfo,
-    getAllAccounts,
-    addAccountToBank, // Adding the function to include account in bank records
-  };
 }
 
-const bank = createBank();
+const bank = new Bank();
 
-const johnDoe = new Client("John Doe", 500); // John Doe with pocket money of 500
-const janeSmith = new Client("Jane Smith", 1000); // Jane Smith with pocket money of 1000
+const johnDoe = new Client("John Doe", 500);
+const janeSmith = new Client("Jane Smith", 1000);
 
-const account1 = createAccount(johnDoe, "123456", 1000); // Creating an account for John Doe
-const account2 = createAccount(johnDoe, "987654", 2000); // Creating another account for John Doe
-const account3 = createAccount(janeSmith, "555555", 1500); // Creating an account for Jane Smith
-
-bank.addAccountToBank(account1); // Adding account1 to the bank records
-bank.addAccountToBank(account2); // Adding account2 to the bank records
-bank.addAccountToBank(account3); // Adding account3 to the bank records
+const account1 = bank.createAccount(johnDoe, "123456", 1000);
+const account2 = bank.createAccount(johnDoe, "987654", 2000);
+const account3 = bank.createAccount(janeSmith, "555555", 1500);
 
 try {
   bank.deposit(account1, 500);
-  bank.retrieve(account1, 200); // Retrieving a smaller amount to avoid the error
+  bank.retrieve(account1, 2000);
 } catch (error) {
   console.error(error.message);
 }
